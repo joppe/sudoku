@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sudoku</title>
+    <link type="text/css" rel="stylesheet" href="bower-components/bootstrap-css/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="css/screen.css">
+    <script type="text/javascript" src="bower-components/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="bower-components/underscore/underscore-min.js"></script>
+    <script type="text/javascript" src="js/sudoku.js"></script>
+    <script type="text/javascript">
+        jQuery(function () {
+            Sudoku.create($('#sudoku'));
+        });
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div id="sudoku"></div>
+    </div>
+</body>
+</html>
