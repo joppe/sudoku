@@ -23,6 +23,7 @@
         }
 
         .cell {
+            position: relative;
             float: left;
             width: $cell-size;
             height: $cell-size;
@@ -34,6 +35,10 @@
             }
 
             input {
+                position: absolute;
+                z-index: 2;
+                left: 0;
+                top: 0;
                 display: none;
                 width: $cell-size;
                 height: $cell-size;
@@ -47,6 +52,10 @@
             }
 
             div.value {
+                position: absolute;
+                z-index: 2;
+                left: 0;
+                top: 0;
                 display: block;
                 width: $cell-size;
                 height: $cell-size;
@@ -54,6 +63,31 @@
                 font: {
                     size: 36px;
                     weight: bold;
+                }
+            }
+
+            div.posibilities {
+                position: absolute;
+                z-index: 1;
+                left: 0;
+                top: 0;
+                width: $cell-size;
+                height: $cell-size;
+
+                div.digit {
+                    float: left;
+                    width: $cell-size/3;
+                    height: $cell-size/3;
+                    text-align: center;
+                    line-height: $cell-size/3;
+                    font: {
+                        size: 15px;
+                    }
+                    color: lightgray;
+
+                    &:nth-child(3n + 1) {
+                        clear: left;
+                    }
                 }
             }
 
