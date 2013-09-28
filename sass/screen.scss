@@ -91,14 +91,13 @@
                 }
             }
 
-            &.initial {
-                background-color: limegreen;
-                color: #ffffff;
-            }
-
             &.solved {
                 background-color: orange;
                 color: #ffffff;
+
+                &.initial {
+                    background-color: limegreen;
+                }
             }
         }
     }
