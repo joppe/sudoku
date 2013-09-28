@@ -111,6 +111,70 @@ window.Sudoku = (function ($, _) {
         return change;
     });
 
+    // check by horizontal line
+    Solver.add(function (cells) {
+        var change = false;
+
+        window.console.log('check by horizontal line');
+        _.each(_.range(0, 9), function (row) {
+            // first index the values that are used in this line
+            var values = [];
+
+            _.each(_.range(0, 9), function (column) {
+                var cell = cells[row][column];
+
+                if (cell.value !== null) {
+                    values.push(parseInt(cell.value, 10));
+                }
+            });
+
+            if (values.length > 0) {
+                // now remove the values from the posibilities
+                _.each(_.range(0, 9), function (column) {
+                    var cell = cells[row][column];
+
+                    if (cell.unsetPosibilities(values)) {
+                        change = true;
+                    }
+                });
+            }
+        });
+
+        return change;
+    });
+
+    // check by vertical line
+    Solver.add(function (cells) {
+        var change = false;
+
+        window.console.log('check by vertical line');
+        _.each(_.range(0, 9), function (column) {
+            // first index the values that are used in this line
+            var values = [];
+
+            _.each(_.range(0, 9), function (row) {
+                var cell = cells[row][column];
+
+                if (cell.value !== null) {
+                    values.push(parseInt(cell.value, 10));
+                }
+            });
+
+            if (values.length > 0) {
+                // now remove the values from the posibilities
+                _.each(_.range(0, 9), function (row) {
+                    var cell = cells[row][column];
+
+                    if (cell.unsetPosibilities(values)) {
+                        change = true;
+                    }
+                });
+            }
+        });
+
+        return change;
+    });
+
     /**
      * A Cell has two views, one to initialize the sudoku and one display the solution
      * @constructor
