@@ -16,8 +16,8 @@
     #sudoku .block .cell {
       position: relative;
       float: left;
-      width: 80px;
-      height: 80px;
+      width: 50px;
+      height: 50px;
       border: 1px solid black;
       text-align: center; }
       #sudoku .block .cell:nth-child(3n + 1) {
@@ -28,12 +28,12 @@
         left: 0;
         top: 0;
         display: none;
-        width: 80px;
-        height: 80px;
+        width: 50px;
+        height: 50px;
         border: none;
         background: transparent;
         text-align: center;
-        font-size: 36px;
+        font-size: 24px;
         font-weight: bold; }
       #sudoku .block .cell div.value {
         position: absolute;
@@ -41,30 +41,33 @@
         left: 0;
         top: 0;
         display: block;
-        width: 80px;
-        height: 80px;
-        line-height: 80px;
-        font-size: 36px;
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+        font-size: 24px;
         font-weight: bold; }
       #sudoku .block .cell div.posibilities {
         position: absolute;
         z-index: 1;
         left: 0;
         top: 0;
-        width: 80px;
-        height: 80px; }
+        width: 50px;
+        height: 50px; }
         #sudoku .block .cell div.posibilities div.digit {
           float: left;
-          width: 26.66667px;
-          height: 26.66667px;
+          width: 16.66667px;
+          height: 16.66667px;
           text-align: center;
-          line-height: 26.66667px;
+          line-height: 16.66667px;
           font-size: 15px;
           color: lightgray; }
           #sudoku .block .cell div.posibilities div.digit:nth-child(3n + 1) {
             clear: left; }
-      #sudoku .block .cell.solved {
+      #sudoku .block .cell.initial {
         background-color: limegreen;
+        color: #ffffff; }
+      #sudoku .block .cell.solved {
+        background-color: orange;
         color: #ffffff; }
   #sudoku.input .block .cell input {
     display: block; }

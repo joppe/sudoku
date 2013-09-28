@@ -231,16 +231,22 @@ window.Sudoku = (function ($, _) {
             return changed;
         },
 
-        setValue: function (value) {
+        setValue: function (value, initial) {
+            initial = (initial === undefined) ? false : initial;
+
             this.value = value;
             this.posibilities = [];
             this.$text.text(value);
             this.$wrapper.addClass('solved');
+
+            if (initial) {
+                this.$wrapper.addClass('initial');
+            }
         },
 
         addEventHandlers: function () {
             this.$input.on('change', $.proxy(function () {
-                this.setValue(this.$input.val());
+                this.setValue(this.$input.val(), true);
             }, this));
         },
 

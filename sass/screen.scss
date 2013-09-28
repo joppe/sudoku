@@ -46,7 +46,7 @@
                 background: transparent;
                 text-align: center;
                 font: {
-                    size: 36px;
+                    size: $font-size;
                     weight: bold;
                 }
             }
@@ -61,7 +61,7 @@
                 height: $cell-size;
                 line-height: $cell-size;
                 font: {
-                    size: 36px;
+                    size: $font-size;
                     weight: bold;
                 }
             }
@@ -91,8 +91,13 @@
                 }
             }
 
-            &.solved {
+            &.initial {
                 background-color: limegreen;
+                color: #ffffff;
+            }
+
+            &.solved {
+                background-color: orange;
                 color: #ffffff;
             }
         }
