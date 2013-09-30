@@ -63,12 +63,11 @@
           color: lightgray; }
           #sudoku .block .cell div.posibilities div.digit:nth-child(3n + 1) {
             clear: left; }
-      #sudoku .block .cell.initial {
-        background-color: limegreen;
-        color: #ffffff; }
       #sudoku .block .cell.solved {
         background-color: orange;
         color: #ffffff; }
+        #sudoku .block .cell.solved.initial {
+          background-color: limegreen; }
   #sudoku.input .block .cell input {
     display: block; }
   #sudoku.input .block .cell div.value {

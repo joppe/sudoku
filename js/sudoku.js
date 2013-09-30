@@ -5,9 +5,89 @@ window.Sudoku = (function ($, _) {
 
     var Sudoku,
         Cell,
-        Solver;
+        Solver,
+        Helper;
 
-    Solver = function () {};
+    function cacher(func) {
+        var cache = null;
+
+        return function () {
+            if (cache === null) {
+                cache = func.apply(this, arguments);
+            }
+
+            return cache;
+        };
+    }
+
+    Helper = {
+        indexes: _.range(0, 9),
+
+        getCellByBlockAndCellIndex: function (cells, blockIndex, cellIndex) {
+            var rowIndex = (Math.floor(blockIndex / 3) * 3) + Math.floor(cellIndex / 3),
+                columnIndex = ((blockIndex % 3) * 3) + (cellIndex % 3);
+
+            return cells[rowIndex][columnIndex];
+        },
+
+        getBlock: function (cells, blockIndex) {
+            var blockCells = [];
+
+            _.each(Helper.indexes, function (cellIndex) {
+                blockCells.push(Helper.getCellByBlockAndCellIndex(cells, blockIndex, cellIndex));
+            });
+
+            return blockCells;
+        },
+
+        getBlocks: cacher(function (cells) {
+            var blocks = [];
+
+            _.each(Helper.indexes, function (blockIndex) {
+                blocks.push(Helper.getBlock(cells, blockIndex));
+            });
+
+            return blocks;
+        }),
+
+        getRow: function (cells, rowIndex) {
+            return cells[rowIndex];
+        },
+
+        getRows: cacher(function (cells) {
+            var rows = [];
+
+            _.each(Helper.indexes, function (rowIndex) {
+                rows.push(Helper.getRow(cells, rowIndex));
+            });
+
+            return rows;
+        }),
+
+        getColumn: function (cells, columnIndex) {
+            var blocks = [];
+
+            _.each(Helper.indexes, function (rowIndex) {
+                blocks.push(cells[rowIndex][columnIndex]);
+            });
+
+            return blocks;
+        },
+
+        getColumns: cacher(function (cells) {
+            var columns = [];
+
+            _.each(Helper.indexes, function (columnIndex) {
+                columns.push(Helper.getColumn(cells, columnIndex));
+            });
+
+            return columns;
+        })
+    };
+
+    Solver = function (cells) {
+        this.cells = cells;
+    };
     Solver.solvers = [];
     Solver.add = function (solver) {
         Solver.solvers.push(solver);
@@ -15,8 +95,7 @@ window.Sudoku = (function ($, _) {
         return Solver;
     };
     Solver.prototype = {
-        solve: function (cells) {
-            this.cells = cells;
+        solve: function () {
             this.current = null;
             this.iterations = 0;
             this.unsuccessfulIterations = 0;
@@ -80,27 +159,19 @@ window.Sudoku = (function ($, _) {
         var change = false;
 
         window.console.log('check by block');
-        _.each(_.range(0, 9), function (blockCount) {
+        _.each(Helper.getBlocks(cells), function (block) {
             // first index the values that are used in this block
             var values = [];
 
-            _.each(_.range(0, 9), function (cellCount) {
-                var row = (Math.floor(blockCount / 3) * 3) + Math.floor(cellCount / 3),
-                    column = ((blockCount % 3) * 3) + (cellCount % 3),
-                    cell = cells[row][column];
-
+            _.each(block, function (cell) {
                 if (cell.value !== null) {
-                    values.push(parseInt(cell.value, 10));
+                    values.push(cell.value);
                 }
             });
 
             if (values.length > 0) {
                 // now remove the values from the posibilities
-                _.each(_.range(0, 9), function (cellCount) {
-                    var row = (Math.floor(blockCount / 3) * 3) + Math.floor(cellCount / 3),
-                        column = ((blockCount % 3) * 3) + (cellCount % 3),
-                        cell = cells[row][column];
-
+                _.each(block, function (cell) {
                     if (cell.unsetPosibilities(values)) {
                         change = true;
                     }
@@ -109,30 +180,26 @@ window.Sudoku = (function ($, _) {
         });
 
         return change;
-    });
+    });/**/
 
     // check by horizontal line
     Solver.add(function (cells) {
         var change = false;
 
         window.console.log('check by horizontal line');
-        _.each(_.range(0, 9), function (row) {
+        _.each(Helper.getRows(cells), function (row) {
             // first index the values that are used in this line
             var values = [];
 
-            _.each(_.range(0, 9), function (column) {
-                var cell = cells[row][column];
-
+            _.each(row, function (cell) {
                 if (cell.value !== null) {
-                    values.push(parseInt(cell.value, 10));
+                    values.push(cell.value);
                 }
             });
 
             if (values.length > 0) {
                 // now remove the values from the posibilities
-                _.each(_.range(0, 9), function (column) {
-                    var cell = cells[row][column];
-
+                _.each(row, function (cell) {
                     if (cell.unsetPosibilities(values)) {
                         change = true;
                     }
@@ -141,30 +208,26 @@ window.Sudoku = (function ($, _) {
         });
 
         return change;
-    });
+    });/**/
 
     // check by vertical line
     Solver.add(function (cells) {
         var change = false;
 
         window.console.log('check by vertical line');
-        _.each(_.range(0, 9), function (column) {
+        _.each(Helper.getColumns(cells), function (column) {
             // first index the values that are used in this line
             var values = [];
 
-            _.each(_.range(0, 9), function (row) {
-                var cell = cells[row][column];
-
+            _.each(column, function (cell) {
                 if (cell.value !== null) {
-                    values.push(parseInt(cell.value, 10));
+                    values.push(cell.value);
                 }
             });
 
             if (values.length > 0) {
                 // now remove the values from the posibilities
-                _.each(_.range(0, 9), function (row) {
-                    var cell = cells[row][column];
-
+                _.each(column, function (cell) {
                     if (cell.unsetPosibilities(values)) {
                         change = true;
                     }
@@ -174,6 +237,37 @@ window.Sudoku = (function ($, _) {
 
         return change;
     });
+    /**/
+
+    // check if only posibility in block
+    Solver.add(function (cells) {
+        var change = false;
+
+        window.console.log('check if only posibility');
+        _.each(Helper.getBlocks(cells), function (block, blockIndex) {
+            _.each(block, function (cell) {
+                var posibilities;
+
+                if (null === cell.value) {
+                    posibilities = cell.posibilities;
+
+                    _.every(block, function (sibling) {
+                        if (sibling.id !== cell.id && null === sibling.value) {
+                            posibilities = _.difference(posibilities, sibling.posibilities);
+                        }
+
+                        return posibilities.length > 0;
+                    });
+
+                    if (posibilities.length === 1) {
+                        cell.setValue(posibilities.shift());
+                    }
+                }
+            });
+        });
+
+        return change;
+    });/**/
 
     /**
      * A Cell has two views, one to initialize the sudoku and one display the solution
@@ -185,6 +279,7 @@ window.Sudoku = (function ($, _) {
         this.row = row;
         this.column = column;
 
+        this.id = row + ':' + column;
         this.value = null;
         this.posibilities = _.range(1, 10);
 
@@ -246,7 +341,13 @@ window.Sudoku = (function ($, _) {
 
         addEventHandlers: function () {
             this.$input.on('change', $.proxy(function () {
-                this.setValue(this.$input.val(), true);
+                var value = parseInt(this.$input.val(), 10);
+
+                if (isNaN(value)) {
+                    this.$input.val('');
+                } else {
+                    this.setValue(value, true);
+                }
             }, this));
         },
 
@@ -264,7 +365,7 @@ window.Sudoku = (function ($, _) {
         this.$container = $container;
 
         this.cells = {};
-        this.solver = new Solver();
+        this.solver = new Solver(this.cells);
 
         this.render();
         this.addEventHandlers();
@@ -273,7 +374,7 @@ window.Sudoku = (function ($, _) {
         solve: function () {
             this.$container.removeClass('input');
 
-            this.solver.solve(this.cells);
+            this.solver.solve();
         },
 
         addEventHandlers: function () {
