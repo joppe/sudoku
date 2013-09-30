@@ -291,15 +291,17 @@ window.Sudoku = (function ($, _) {
             var self = this,
                 html = '';
 
-            _.each(_.range(1, 10), function (value) {
-                var text = '';
+            if (this.posibilities.length > 0) {
+                _.each(_.range(1, 10), function (value) {
+                    var text = '';
 
-                if (self.posibilities.indexOf(value) !== -1) {
-                    text = value;
-                }
+                    if (self.posibilities.indexOf(value) !== -1) {
+                        text = value;
+                    }
 
-                html += '<div class="digit">' + text + '</div>';
-            });
+                    html += '<div class="digit">' + text + '</div>';
+                });
+            }
 
             this.$posibilities.html(html);
         },
