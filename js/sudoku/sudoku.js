@@ -1,4 +1,4 @@
-/*global jQuery, _, Solver*/
+/*global jQuery, _, Solver, Cell*/
 
 window.Sudoku = (function ($, _) {
     'use strict';
@@ -10,7 +10,6 @@ window.Sudoku = (function ($, _) {
         this.solver = new Solver(this.cells);
 
         this.render();
-        this.addEventHandlers();
     };
     Sudoku.prototype = {
         solve: function () {
@@ -19,15 +18,8 @@ window.Sudoku = (function ($, _) {
             this.solver.solve();
         },
 
-        addEventHandlers: function () {
-            this.$solve.on('click', $.proxy(this.solve, this));
-        },
-
         render: function () {
-            var self = this,
-                    $actionWrapper = $('<div class="container btn-group"></div>').insertBefore(this.$container);
-
-            this.$solve = $('<a class="btn btn-success solve">Solve</a>').appendTo($actionWrapper);
+            var self = this;
 
             _.each(_.range(0, 9), function (blockCount) {
                 var $block = $('<div class="block"></div>');

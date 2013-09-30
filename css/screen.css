@@ -3,6 +3,9 @@
 *:after {
   box-sizing: border-box; }
 
+#toolbar {
+  margin: 20px 0; }
+
 #sudoku {
   float: left;
   border: 4px solid black; }
