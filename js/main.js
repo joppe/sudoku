@@ -7,6 +7,7 @@ jQuery(function ($) {
         $sudoku = $('#sudoku'),
         $solve = $('<a class="btn btn-success solve">Solve</a>'),
         $export = $('<a class="btn btn-primary">Export</a>'),
+        $import = $('<a class="btn btn-warning">Import</a>'),
         $validate = $('<a class="btn btn-default">Validate</a>'),
         sudoku = new Sudoku($sudoku);
 
@@ -20,6 +21,12 @@ jQuery(function ($) {
         event.preventDefault();
 
         $('#data').val(sudoku.export('|'));
+    });
+
+    $import.on('click', function (event) {
+        event.preventDefault();
+
+        sudoku.import($('#data').val(), '|');
     });
 
     $validate.on('click', function (event) {
@@ -38,5 +45,6 @@ jQuery(function ($) {
 
     $toolbar.append($solve);
     $toolbar.append($export);
+    $toolbar.append($import);
     $toolbar.append($validate);
 });

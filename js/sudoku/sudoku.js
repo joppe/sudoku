@@ -3,27 +3,10 @@
 window.Sudoku = (function ($, _) {
     'use strict';
 
-    function validate(group) {
-        return _.every(group, function (block) {
-            var values = [];
+    var SEPARATOR = ',',
+        Sudoku;
 
-            return _.every(block, function (cell) {
-                var valid = true;
-
-                if (cell.value !== null) {
-                    if (_.indexOf(values, cell.value) !== -1) {
-                        valid = false;
-                    }
-
-                    values.push(cell.value);
-                }
-
-                return valid;
-            });
-        });
-    }
-
-    var Sudoku = function ($container) {
+    Sudoku = function ($container) {
         this.$container = $container;
 
         this.cells = {};
@@ -35,7 +18,7 @@ window.Sudoku = (function ($, _) {
         export: function (separator) {
             var output = [];
 
-            separator = separator || ',';
+            separator = separator || SEPARATOR;
 
             _.each(this.cells, function (row) {
                 _.each(row, function (cell) {
@@ -44,6 +27,23 @@ window.Sudoku = (function ($, _) {
             });
 
             return output.join(separator);
+        },
+
+        import: function (input, separator) {
+            var data = input.split(separator || SEPARATOR),
+                index = 0;
+
+            _.each(this.cells, function (row) {
+                _.each(row, function (cell) {
+                    var value = data[index];
+
+                    if (value !== 'null') {
+                        cell.setValue(value);
+                    }
+
+                    index += 1;
+                });
+            });
         },
 
         isValid: function () {
