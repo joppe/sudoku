@@ -20,9 +20,17 @@ window.Helper = (function ($, _) {
     Helper = {
         indexes: _.range(0, 9),
 
+        getRowIndex: function (blockIndex, cellIndex) {
+            return (Math.floor(blockIndex / 3) * 3) + Math.floor(cellIndex / 3);
+        },
+
+        getColumnIndex: function (blockIndex, cellIndex) {
+            return ((blockIndex % 3) * 3) + (cellIndex % 3);
+        },
+
         getCellByBlockAndCellIndex: function (cells, blockIndex, cellIndex) {
-            var rowIndex = (Math.floor(blockIndex / 3) * 3) + Math.floor(cellIndex / 3),
-                    columnIndex = ((blockIndex % 3) * 3) + (cellIndex % 3);
+            var rowIndex = Helper.getRowIndex(blockIndex, cellIndex),
+                columnIndex = Helper.getColumnIndex(blockIndex, cellIndex);
 
             return cells[rowIndex][columnIndex];
         },

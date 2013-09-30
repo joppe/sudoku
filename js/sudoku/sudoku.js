@@ -38,7 +38,7 @@ window.Sudoku = (function ($, _) {
                     var value = data[index];
 
                     if (value !== 'null') {
-                        cell.setValue(value);
+                        cell.setValue(value, true);
                     }
 
                     index += 1;
@@ -77,20 +77,20 @@ window.Sudoku = (function ($, _) {
         render: function () {
             var self = this;
 
-            _.each(_.range(0, 9), function (blockCount) {
+            _.each(Helper.indexes, function (blockIndex) {
                 var $block = $('<div class="block"></div>');
 
                 self.$container.append($block);
 
-                _.each(_.range(0, 9), function (cellCount) {
-                    var row = (Math.floor(blockCount / 3) * 3) + Math.floor(cellCount / 3),
-                        column = ((blockCount % 3) * 3) + (cellCount % 3);
+                _.each(Helper.indexes, function (cellIndex) {
+                    var rowIndex = Helper.getRowIndex(blockIndex, cellIndex),
+                        columnIndex = Helper.getColumnIndex(blockIndex, cellIndex);
 
-                    if (self.cells[row] === undefined) {
-                        self.cells[row] = {};
+                    if (self.cells[rowIndex] === undefined) {
+                        self.cells[rowIndex] = {};
                     }
 
-                    self.cells[row][column] = new Cell($block, blockCount, row, column);
+                    self.cells[rowIndex][columnIndex] = new Cell($block, blockIndex, rowIndex, columnIndex);
                 });
 
                 return {};

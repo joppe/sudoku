@@ -3,9 +3,9 @@
 ## Todo
 + create toolbar
 + create export functionality
-- add a validator
-- create import functionality
-- sudoku render method, make use of Helper
++ add a validator
++ create import functionality
++ sudoku render method, make use of Helper
 - add a stop for solver
 - toggle edit values
 - inject the solver in the sudoku
