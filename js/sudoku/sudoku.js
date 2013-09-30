@@ -12,6 +12,20 @@ window.Sudoku = (function ($, _) {
         this.render();
     };
     Sudoku.prototype = {
+        export: function (separator) {
+            var output = [];
+
+            separator = separator || ',';
+
+            _.each(this.cells, function (row) {
+                _.each(row, function (cell) {
+                    output.push(cell.value || 'null');
+                });
+            });
+
+            return output.join(separator);
+        },
+
         solve: function () {
             this.$container.removeClass('input');
 
@@ -28,7 +42,7 @@ window.Sudoku = (function ($, _) {
 
                 _.each(_.range(0, 9), function (cellCount) {
                     var row = (Math.floor(blockCount / 3) * 3) + Math.floor(cellCount / 3),
-                            column = ((blockCount % 3) * 3) + (cellCount % 3);
+                        column = ((blockCount % 3) * 3) + (cellCount % 3);
 
                     if (self.cells[row] === undefined) {
                         self.cells[row] = {};

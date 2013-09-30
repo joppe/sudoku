@@ -10,6 +10,13 @@
     margin: 20px 0;
 }
 
+#data {
+    float: right;
+    width: 400px;
+    height: 200px;
+    border: 1px solid $border-color;
+}
+
 #sudoku {
     float: left;
     border: 4px solid $border-color;
