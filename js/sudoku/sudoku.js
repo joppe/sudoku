@@ -69,8 +69,6 @@ window.Sudoku = (function ($, _) {
         },
 
         solve: function () {
-            this.$container.removeClass('input');
-
             this.solver.solve();
         },
 
@@ -95,8 +93,6 @@ window.Sudoku = (function ($, _) {
 
                 return {};
             });
-
-            this.$container.addClass('input');
         }
     };
 

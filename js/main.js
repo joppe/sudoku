@@ -8,6 +8,7 @@ jQuery(function ($) {
         $solve = $('<a class="btn btn-success solve">Solve</a>'),
         $export = $('<a class="btn btn-primary">Export</a>'),
         $import = $('<a class="btn btn-warning">Import</a>'),
+        $input = $('<a class="btn btn-default">Toggle input</a>'),
         $validate = $('<a class="btn btn-default">Validate</a>'),
         sudoku = new Sudoku($sudoku);
 
@@ -21,6 +22,16 @@ jQuery(function ($) {
         event.preventDefault();
 
         $('#data').val(sudoku.export('|'));
+    });
+
+    $input.on('click', function (event) {
+        event.preventDefault();
+
+        if ($sudoku.hasClass('input')) {
+            $sudoku.removeClass('input');
+        } else {
+            $sudoku.addClass('input');
+        }
     });
 
     $import.on('click', function (event) {
@@ -46,5 +57,6 @@ jQuery(function ($) {
     $toolbar.append($solve);
     $toolbar.append($export);
     $toolbar.append($import);
+    $toolbar.append($input);
     $toolbar.append($validate);
 });

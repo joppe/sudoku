@@ -6,10 +6,10 @@
 + add a validator
 + create import functionality
 + sudoku render method, make use of Helper
-- add a stop for solver
 - toggle edit values
 - inject the solver in the sudoku
 - setpossibilities and setvalue refactoring
 - add row/column solver for only possibility (like block)
 - add force by row/column solver (the possibilities in a block are in one row/column)
 - move the issolved method to sudoku
+- add a stop for solver
