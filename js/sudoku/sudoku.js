@@ -1,7 +1,27 @@
-/*global jQuery, _, Solver, Cell*/
+/*global jQuery, _, Solver, Cell, Helper*/
 
 window.Sudoku = (function ($, _) {
     'use strict';
+
+    function validate(group) {
+        return _.every(group, function (block) {
+            var values = [];
+
+            return _.every(block, function (cell) {
+                var valid = true;
+
+                if (cell.value !== null) {
+                    if (_.indexOf(values, cell.value) !== -1) {
+                        valid = false;
+                    }
+
+                    values.push(cell.value);
+                }
+
+                return valid;
+            });
+        });
+    }
 
     var Sudoku = function ($container) {
         this.$container = $container;
@@ -24,6 +44,28 @@ window.Sudoku = (function ($, _) {
             });
 
             return output.join(separator);
+        },
+
+        isValid: function () {
+            return _.every([Helper.getBlocks(this.cells), Helper.getRows(this.cells), Helper.getColumns(this.cells)], function (groups) {
+                return _.every(groups, function (group) {
+                    var values = [];
+
+                    return _.every(group, function (cell) {
+                        var valid = true;
+
+                        if (cell.value !== null) {
+                            if (_.indexOf(values, cell.value) !== -1) {
+                                valid = false;
+                            }
+
+                            values.push(cell.value);
+                        }
+
+                        return valid;
+                    });
+                });
+            });
         },
 
         solve: function () {

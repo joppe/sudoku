@@ -2,9 +2,9 @@
 
 ## Todo
 + create toolbar
-- create export functionality
-- create import functionality
++ create export functionality
 - add a validator
+- create import functionality
 - sudoku render method, make use of Helper
 - add a stop for solver
 - toggle edit values
@@ -12,3 +12,4 @@
 - setpossibilities and setvalue refactoring
 - add row/column solver for only possibility (like block)
 - add force by row/column solver (the possibilities in a block are in one row/column)
+- move the issolved method to sudoku
