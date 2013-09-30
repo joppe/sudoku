@@ -63,7 +63,7 @@ window.Cell = (function ($, _) {
         },
 
         setValue: function (value, initial) {
-            initial = (initial === undefined) ? false : initial;
+            initial = initial || false;
 
             this.value = value;
             this.possibilities = [];
