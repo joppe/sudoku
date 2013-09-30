@@ -1,4 +1,4 @@
-/*global jQuery, _*/
+/*global jQuery, _, Helper*/
 
 window.Solver = (function ($, _) {
     'use strict';
@@ -102,7 +102,7 @@ window.Solver = (function ($, _) {
         return change;
     });/**/
 
-        // check by horizontal line
+    // check by horizontal line
     Solver.add(function (cells) {
         var change = false;
 
@@ -130,7 +130,7 @@ window.Solver = (function ($, _) {
         return change;
     });/**/
 
-        // check by vertical line
+    // check by vertical line
     Solver.add(function (cells) {
         var change = false;
 
@@ -158,12 +158,12 @@ window.Solver = (function ($, _) {
         return change;
     });/**/
 
-        // check if only posibility in block
+    // check if only posibility in block
     Solver.add(function (cells) {
         var change = false;
 
         window.console.log('check if only posibility');
-        _.each(Helper.getBlocks(cells), function (block, blockIndex) {
+        _.each(Helper.getBlocks(cells), function (block) {
             _.each(block, function (cell) {
                 var possibilities;
 
