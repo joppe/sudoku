@@ -170,9 +170,9 @@ window.Sudoku = (function ($, _) {
             });
 
             if (values.length > 0) {
-                // now remove the values from the posibilities
+                // now remove the values from the possibilities
                 _.each(block, function (cell) {
-                    if (cell.unsetPosibilities(values)) {
+                    if (cell.unsetPossibilities(values)) {
                         change = true;
                     }
                 });
@@ -198,9 +198,9 @@ window.Sudoku = (function ($, _) {
             });
 
             if (values.length > 0) {
-                // now remove the values from the posibilities
+                // now remove the values from the possibilities
                 _.each(row, function (cell) {
-                    if (cell.unsetPosibilities(values)) {
+                    if (cell.unsetPossibilities(values)) {
                         change = true;
                     }
                 });
@@ -226,9 +226,9 @@ window.Sudoku = (function ($, _) {
             });
 
             if (values.length > 0) {
-                // now remove the values from the posibilities
+                // now remove the values from the possibilities
                 _.each(column, function (cell) {
-                    if (cell.unsetPosibilities(values)) {
+                    if (cell.unsetPossibilities(values)) {
                         change = true;
                     }
                 });
@@ -246,21 +246,21 @@ window.Sudoku = (function ($, _) {
         window.console.log('check if only posibility');
         _.each(Helper.getBlocks(cells), function (block, blockIndex) {
             _.each(block, function (cell) {
-                var posibilities;
+                var possibilities;
 
                 if (null === cell.value) {
-                    posibilities = cell.posibilities;
+                    possibilities = cell.possibilities;
 
                     _.every(block, function (sibling) {
                         if (sibling.id !== cell.id && null === sibling.value) {
-                            posibilities = _.difference(posibilities, sibling.posibilities);
+                            possibilities = _.difference(possibilities, sibling.possibilities);
                         }
 
-                        return posibilities.length > 0;
+                        return possibilities.length > 0;
                     });
 
-                    if (posibilities.length === 1) {
-                        cell.setValue(posibilities.shift());
+                    if (possibilities.length === 1) {
+                        cell.setValue(possibilities.shift());
                     }
                 }
             });
@@ -281,7 +281,7 @@ window.Sudoku = (function ($, _) {
 
         this.id = row + ':' + column;
         this.value = null;
-        this.posibilities = _.range(1, 10);
+        this.possibilities = _.range(1, 10);
 
         this.render();
         this.addEventHandlers();
@@ -291,11 +291,11 @@ window.Sudoku = (function ($, _) {
             var self = this,
                 html = '';
 
-            if (this.posibilities.length > 0) {
+            if (this.possibilities.length > 0) {
                 _.each(_.range(1, 10), function (value) {
                     var text = '';
 
-                    if (self.posibilities.indexOf(value) !== -1) {
+                    if (self.possibilities.indexOf(value) !== -1) {
                         text = value;
                     }
 
@@ -303,21 +303,21 @@ window.Sudoku = (function ($, _) {
                 });
             }
 
-            this.$posibilities.html(html);
+            this.$possibilities.html(html);
         },
 
-        unsetPosibilities: function(posibilities) {
-            var len = this.posibilities.length,
+        unsetPossibilities: function(possibilities) {
+            var len = this.possibilities.length,
                 changed = false,
                 newLen;
 
             if (len > 1) {
-                this.posibilities = _.difference(this.posibilities, posibilities);
+                this.possibilities = _.difference(this.possibilities, possibilities);
 
-                newLen = this.posibilities.length;
+                newLen = this.possibilities.length;
 
                 if (newLen === 1) {
-                    this.setValue(this.posibilities.shift());
+                    this.setValue(this.possibilities.shift());
                 }
 
                 this.renderPosibilities();
@@ -332,7 +332,7 @@ window.Sudoku = (function ($, _) {
             initial = (initial === undefined) ? false : initial;
 
             this.value = value;
-            this.posibilities = [];
+            this.possibilities = [];
             this.$text.text(value);
             this.$wrapper.addClass('solved');
 
@@ -355,7 +355,7 @@ window.Sudoku = (function ($, _) {
 
         render: function () {
             this.$wrapper = $('<div class="cell" data-block="' + this.block + '" data-row="' + this.row + '" data-column="' + this.column + '"></div>');
-            this.$posibilities = $('<div class="posibilities"></div>').appendTo(this.$wrapper);
+            this.$possibilities = $('<div class="possibilities"></div>').appendTo(this.$wrapper);
             this.$input = $('<input type="text">').appendTo(this.$wrapper);
             this.$text = $('<div class="value"></div>').appendTo(this.$wrapper);
 
