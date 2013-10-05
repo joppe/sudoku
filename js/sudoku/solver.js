@@ -93,8 +93,14 @@ window.Solver = (function ($, _) {
                 if (values.length > 0) {
                     // now remove the values from the possibilities
                     _.each(group, function (cell) {
-                        if (cell.unsetPossibilities(values)) {
-                            change = true;
+                        var len = cell.possibilities.length;
+
+                        if (len > 1) {
+                            cell.setPossibilities(_.difference(cell.possibilities, values));
+
+                            if (cell.possibilities.length !== len) {
+                                change = true;
+                            }
                         }
                     });
                 }
@@ -127,7 +133,7 @@ window.Solver = (function ($, _) {
                         });
 
                         if (1 === possibilities.length) {
-                            cell.setValue(possibilities[0]);
+                            cell.setPossibilities(possibilities);
                         }
                     }
                 });

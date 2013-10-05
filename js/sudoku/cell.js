@@ -21,45 +21,26 @@ window.Cell = (function ($, _) {
         this.addEventHandlers();
     };
     Cell.prototype = {
-        renderPosibilities: function () {
-            var self = this,
-                    html = '';
+        setPossibilities: function (possibilities) {
+            var html = '';
 
-            if (this.possibilities.length > 0) {
+            this.possibilities = possibilities;
+
+            if (1 === this.possibilities.length) {
+                this.setValue(this.possibilities[0]);
+            } else {
                 _.each(_.range(1, 10), function (value) {
                     var text = '';
 
-                    if (self.possibilities.indexOf(value) !== -1) {
+                    if (this.possibilities.indexOf(value) !== -1) {
                         text = value;
                     }
 
                     html += '<div class="digit">' + text + '</div>';
-                });
+                }, this);
+
+                this.$possibilities.html(html);
             }
-
-            this.$possibilities.html(html);
-        },
-
-        unsetPossibilities: function(possibilities) {
-            var len = this.possibilities.length,
-                    changed = false,
-                    newLen;
-
-            if (len > 1) {
-                this.possibilities = _.difference(this.possibilities, possibilities);
-
-                newLen = this.possibilities.length;
-
-                if (newLen === 1) {
-                    this.setValue(this.possibilities[0]);
-                }
-
-                this.renderPosibilities();
-
-                changed = newLen !== len;
-            }
-
-            return changed;
         },
 
         setValue: function (value, initial) {
@@ -69,6 +50,8 @@ window.Cell = (function ($, _) {
             if (!isNaN(value) && value <= 9 && value > 0) {
                 this.value = value;
                 this.possibilities = [value];
+
+                this.$possibilities.empty();
                 this.$text.text(value);
                 this.$wrapper.addClass('solved');
 
