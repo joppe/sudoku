@@ -51,7 +51,7 @@ window.Cell = (function ($, _) {
                 newLen = this.possibilities.length;
 
                 if (newLen === 1) {
-                    this.setValue(this.possibilities.shift());
+                    this.setValue(this.possibilities[0]);
                 }
 
                 this.renderPosibilities();
@@ -63,27 +63,24 @@ window.Cell = (function ($, _) {
         },
 
         setValue: function (value, initial) {
+            value = parseInt(value, 10);
             initial = initial || false;
 
-            this.value = value;
-            this.possibilities = [];
-            this.$text.text(value);
-            this.$wrapper.addClass('solved');
+            if (!isNaN(value) && value <= 9 && value > 0) {
+                this.value = value;
+                this.possibilities = [value];
+                this.$text.text(value);
+                this.$wrapper.addClass('solved');
 
-            if (initial) {
-                this.$wrapper.addClass('initial');
+                if (initial) {
+                    this.$wrapper.addClass('initial');
+                }
             }
         },
 
         addEventHandlers: function () {
             this.$input.on('change', $.proxy(function () {
-                var value = parseInt(this.$input.val(), 10);
-
-                if (isNaN(value)) {
-                    this.$input.val('');
-                } else {
-                    this.setValue(value, true);
-                }
+                this.setValue(this.$input.val(), true);
             }, this));
         },
 
