@@ -74,85 +74,31 @@ window.Solver = (function ($, _) {
         }
     };
 
-    // check by block
-    Solver.add(function (cells) {
-        var change = false;
-
-        window.console.log('check by block');
-        _.each(Helper.getBlocks(cells), function (block) {
-            // first index the values that are used in this block
-            var values = [];
-
-            _.each(block, function (cell) {
-                if (cell.value !== null) {
-                    values.push(cell.value);
-                }
-            });
-
-            if (values.length > 0) {
-                // now remove the values from the possibilities
-                _.each(block, function (cell) {
-                    if (cell.unsetPossibilities(values)) {
-                        change = true;
-                    }
-                });
-            }
-        });
-
-        return change;
-    });/**/
-
-    // check by horizontal line
-    Solver.add(function (cells) {
-        var change = false;
-
-        window.console.log('check by horizontal line');
-        _.each(Helper.getRows(cells), function (row) {
-            // first index the values that are used in this line
-            var values = [];
-
-            _.each(row, function (cell) {
-                if (cell.value !== null) {
-                    values.push(cell.value);
-                }
-            });
-
-            if (values.length > 0) {
-                // now remove the values from the possibilities
-                _.each(row, function (cell) {
-                    if (cell.unsetPossibilities(values)) {
-                        change = true;
-                    }
-                });
-            }
-        });
-
-        return change;
-    });/**/
-
     // check by vertical line
     Solver.add(function (cells) {
         var change = false;
 
-        window.console.log('check by vertical line');
-        _.each(Helper.getColumns(cells), function (column) {
-            // first index the values that are used in this line
-            var values = [];
+        window.console.log('check by group');
+        _.each([Helper.getBlocks(cells), Helper.getRows(cells), Helper.getColumns(cells)], function (groups) {
+            _.each(groups, function (group) {
+                // first index the values that are used in this group
+                var values = [];
 
-            _.each(column, function (cell) {
-                if (cell.value !== null) {
-                    values.push(cell.value);
-                }
-            });
-
-            if (values.length > 0) {
-                // now remove the values from the possibilities
-                _.each(column, function (cell) {
-                    if (cell.unsetPossibilities(values)) {
-                        change = true;
+                _.each(group, function (cell) {
+                    if (cell.value !== null) {
+                        values.push(cell.value);
                     }
                 });
-            }
+
+                if (values.length > 0) {
+                    // now remove the values from the possibilities
+                    _.each(group, function (cell) {
+                        if (cell.unsetPossibilities(values)) {
+                            change = true;
+                        }
+                    });
+                }
+            });
         });
 
         return change;
@@ -162,26 +108,29 @@ window.Solver = (function ($, _) {
     Solver.add(function (cells) {
         var change = false;
 
-        window.console.log('check if only posibility');
-        _.each(Helper.getBlocks(cells), function (block) {
-            _.each(block, function (cell) {
-                var possibilities;
+        window.console.log('check if only posibility in group');
+        _.each([Helper.getBlocks(cells), Helper.getRows(cells), Helper.getColumns(cells)], function (groups) {
+            _.each(groups, function (group) {
+                // a group is a line/column/block
+                _.each(group, function (cell) {
+                    var possibilities;
 
-                if (null === cell.value) {
-                    possibilities = cell.possibilities;
+                    if (null === cell.value) {
+                        possibilities = cell.possibilities;
 
-                    _.every(block, function (sibling) {
-                        if (sibling.id !== cell.id && null === sibling.value) {
-                            possibilities = _.difference(possibilities, sibling.possibilities);
+                        _.every(group, function (sibling) {
+                            if (sibling.id !== cell.id) {
+                                possibilities = _.difference(possibilities, sibling.possibilities);
+                            }
+
+                            return possibilities.length > 0;
+                        });
+
+                        if (1 === possibilities.length) {
+                            cell.setValue(possibilities[0]);
                         }
-
-                        return possibilities.length > 0;
-                    });
-
-                    if (possibilities.length === 1) {
-                        cell.setValue(possibilities.shift());
                     }
-                }
+                });
             });
         });
 
