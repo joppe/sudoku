@@ -21,6 +21,10 @@ window.Cell = (function ($, _) {
         this.addEventHandlers();
     };
     Cell.prototype = {
+        isSolved: function () {
+            return (1 === this.possibilities.length);
+        },
+
         setPossibilities: function (possibilities) {
             var html = '';
 

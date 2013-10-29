@@ -87,7 +87,43 @@ window.Helper = (function ($, _) {
             });
 
             return columns;
-        })
+        }),
+
+        getBlockCellsGroupedByProperty: function (block, byProperty) {
+            var group = {};
+
+            _.each(block, function (cell) {
+                if (group[cell[byProperty]] === undefined) {
+                    group[cell[byProperty]] = [];
+                }
+
+                group[cell[byProperty]].push(cell);
+            });
+
+            return group;
+        },
+
+        getBlockRows: function (block) {
+            return Helper.getBlockCellsGroupedByProperty(block, 'row');
+        },
+
+        getBlockColumns: function (block) {
+            return Helper.getBlockCellsGroupedByProperty(block, 'column');
+        },
+
+        getOtherBlockIndexes: function (index) {
+            var start = Math.floor(index / 3) * 3,
+                end = start + 3,
+                indexes = [];
+
+            _.each(_.range(start, end), function (i) {
+                if (i !== index) {
+                    indexes.push(i);
+                }
+            });
+
+            return indexes;
+        }
     };
 
     return Helper;

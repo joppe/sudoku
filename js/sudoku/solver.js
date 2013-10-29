@@ -67,6 +67,7 @@ window.Solver = (function ($, _) {
             if (this.isSolved()) {
                 window.console.log('finished and solved in ' + this.iterations + ' iterations');
             } else if (this.unsuccessfulIterations >= Solver.solvers.length) {
+//            } else if (this.iterations === 3) {
                 window.console.log('finished and NOT solved');
             } else {
                 window.setTimeout($.proxy(this.next, this), 1000);
@@ -74,7 +75,7 @@ window.Solver = (function ($, _) {
         }
     };
 
-    // check by vertical line
+    // check by group, remove the values of all other cells in the same group
     Solver.add(function (cells) {
         var change = false;
 
@@ -142,6 +143,109 @@ window.Solver = (function ($, _) {
 
         return change;
     });/**/
+
+    /**
+     * - Get a block
+     * - Loop over the rows of the block
+     * - Per row check the possibilities that the cells have in common
+     * - Compare the common possebilities with the other two rows, if there is a difference then remove the common
+     *      possebilities form the other rows
+     * - repeat this for the rows
+     */
+    Solver.add(function (cells) {
+        var change = false;
+
+        window.console.log('check force by pair on row/column');
+        _.each(Helper.getBlocks(cells), function (block) {
+            var rows = Helper.getBlockRows(block),
+                columns = Helper.getBlockColumns(block);
+
+            _.each(rows, function (row) {
+                var possibilities = null,
+                    cellCount = 0,
+                    firstCell = _.first(row),
+                    rowIndex = firstCell.row,
+                    columns = [];
+
+                // get the possibilities that have two or more cells in common on the same row within the same block
+                _.each(row, function (cell) {
+                    columns.push(cell.column);
+
+                    if (cell.possibilities.length > 1) {
+                        cellCount += 1;
+
+                        if (possibilities === null) {
+                            possibilities = cell.possibilities;
+                        } else {
+                            possibilities = _.intersection(possibilities, cell.possibilities);
+                        }
+                    }
+                });
+
+                if (cellCount > 1 && possibilities !== null && possibilities.length > 0) {
+                    // remove the possibilities that are in common with cells in different rows within the same block
+                    _.each(Helper.getOtherBlockIndexes(rowIndex), function (index) {
+                        _.each(rows[index], function (cell) {
+                            possibilities = _.difference(possibilities, cell.possibilities);
+                        });
+                    });
+
+                    if (possibilities.length > 0) {
+                        // remove the possibilities from the cells that are in the same row but in an other block
+                        _.each(Helper.getRow(cells, rowIndex), function (cell) {
+                            if (_.indexOf(columns, cell.column) === -1) {
+                                cell.setPossibilities(_.difference(cell.possibilities, possibilities));
+                            }
+                        });
+                    }
+                }
+            });
+
+            _.each(columns, function (column) {
+                var possibilities = null,
+                    cellCount = 0,
+                    firstCell = _.first(column),
+                    columnIndex = firstCell.column,
+                    rows = [];
+
+                // get the possibilities that have two or more cells in common on the same column within the same block
+                _.each(column, function (cell) {
+                    rows.push(cell.row);
+
+                    if (cell.possibilities.length > 1) {
+                        cellCount += 1;
+
+                        if (possibilities === null) {
+                            possibilities = cell.possibilities;
+                        } else {
+                            possibilities = _.intersection(possibilities, cell.possibilities);
+                        }
+                    }
+                });
+
+                if (cellCount > 1 && possibilities !== null && possibilities.length > 0) {
+                    // remove the possibilities that are in common with cells in different columns within the same block
+                    _.each(Helper.getOtherBlockIndexes(columnIndex), function (index) {
+                        _.each(columns[index], function (cell) {
+                            possibilities = _.difference(possibilities, cell.possibilities);
+                        });
+                    });
+
+                    if (possibilities.length > 0) {
+                        // remove the possibilities from the cells that are in the same column but in an other block
+                        _.each(Helper.getColumn(cells, columnIndex), function (cell) {
+                            if (_.indexOf(rows, cell.row) === -1) {
+                                cell.setPossibilities(_.difference(cell.possibilities, possibilities));
+                            }
+                        });
+                    }
+                }
+            });
+        });
+
+        return change;
+    });/**/
+
 
     return Solver;
 }(jQuery, _));
