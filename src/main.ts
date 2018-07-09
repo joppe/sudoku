@@ -16,7 +16,7 @@ import { Sudoku } from 'app/sudoku/Sudoku';
 window.console.log('Sudoku');
 
 const solvers: Array<ISolver> = [];
-const renderer: IRenderer = new Renderer(window.document.querySelector('.js-sudoku'));
+const renderer: IRenderer = new Renderer(window.document.querySelector('body'));
 const s: Sudoku = new Sudoku(solvers, renderer);
 
 s.solve();
