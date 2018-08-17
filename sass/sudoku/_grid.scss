@@ -1,42 +1,53 @@
-.grid {
-    border: 4px solid black;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-}
+$possibility-size: 14px;
 
-.grid__group {
-    $width: 100% / 3;
-    
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    border: 2px solid black;
-    width: $width;
+.grid {
+    float: left;
+    border: 4px solid black;
+
+    &:after {
+        clear: left;
+    }
 }
 
 .grid__cell {
-    $width: 100% / 3;
-    
+    float: left;
     position: relative;
     border: 1px solid black;
-    width: $width;
-}
-
-.grid__cell__back {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-}
-
-.grid__cell__back__possibility {
-    $size: 100% / 3;
     
+    &:nth-child(9n + 1) {
+        clear: left;
+    }
+}
+
+.grid__cell--right {
+    border-right: 3px solid black;
+}
+
+.grid__cell--left {
+    border-right: 3px solid black;
+}
+
+.grid__cell--bottom {
+    border-bottom: 3px solid black;
+}
+
+.grid__cell--top {
+    border-top: 3px solid black;
+}
+
+.grid__cell__possibility {
+    float: left;
     border: 1px solid silver;
-    width: $size;
-    height: 0;
-    padding-bottom: $size;
+    width: $possibility-size;
+    height: $possibility-size;
     text-align: center;
+    line-height: $possibility-size;
+    color: silver;
+    font-size: 10px;
+
+    &:nth-child(3n + 1) {
+        clear: left;
+    }
 }
 
 .grid__cell__front {
@@ -45,5 +56,7 @@
     right: 0;
     bottom: 0;
     left: 0;
+    line-height: 3 * $possibility-size;
     text-align: center;
+    font-size: 18px;
 }

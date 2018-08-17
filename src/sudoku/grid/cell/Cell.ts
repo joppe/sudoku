@@ -1,5 +1,5 @@
 export type Cell = {
-    column: number;
-    possiblities: Array<number>;
+    col: number;
+    possibilities: Array<number>;
     row: number;
 };

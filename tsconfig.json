@@ -19,6 +19,6 @@
         "dist"
     ],
     "include": [
-        "src/**/*.ts"
+        "src/**/*.ts", "test/unit/sudoku/grid/group/byBlock.spec.ts", "test/unit/sudoku/grid/group/byCol.spec.ts", "test/unit/sudoku/grid/getCellByCoords.spec.ts", "test/unit/sudoku/possibilities/complementByCell.spec.ts"
     ]
 }

@@ -1,5 +1,5 @@
-import { Cell } from 'app/sudoku/grid/cell/Cell';
+import { Grid } from 'app/sudoku/grid/Grid';
 
 export interface IRenderer {
-    render(cells: Array<Cell>): void;
+    render(grid: Grid): void;
 }

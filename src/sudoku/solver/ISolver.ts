@@ -1,5 +1,6 @@
-import { Cell } from 'app/sudoku/grid/cell/Cell';
+import { Grid } from 'app/sudoku/grid/Grid';
+import { Solution } from 'app/sudoku/solver/Solution';
 
 export interface ISolver {
-    solve(cell: Array<Cell>): Array<Cell>;
+    solve(grid: Grid): Promise<Solution>;
 }

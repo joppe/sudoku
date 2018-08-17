@@ -3,66 +3,73 @@ import * as array from '@apestaartje/array/dist';
 import { Cell } from 'app/sudoku/grid/cell/Cell';
 import { clone } from 'app/sudoku/grid/cell/clone';
 import { getCellByCoords } from 'app/sudoku/grid/getCellByCoords';
-import { getRow } from 'app/sudoku/grid/getRow';
+import { Grid } from 'app/sudoku/grid/Grid';
 import { IRenderer } from 'app/sudoku/render/IRenderer';
 import { ISolver } from 'app/sudoku/solver/ISolver';
+import { Solution } from 'app/sudoku/solver/Solution';
+
+const SIZE: number = 9;
+const POSSIBILITIES: Array<number> = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 export class Sudoku {
-    private _cells: Array<Cell>;
+    private _grid: Grid = {
+        size: {
+            horizontal: SIZE,
+            vertical: SIZE
+        },
+        cells: new Array(SIZE * SIZE)
+    };
     private _solvers: Array<ISolver>;
     private _renderer: IRenderer;
+    private _index: number = 0;
 
-    constructor(solvers: Array<ISolver>, renderer: IRenderer) {
+    constructor(solvers: Array<ISolver>, renderer: IRenderer, values: Array<number | undefined> = new Array(SIZE * SIZE)) {
         this._solvers = solvers;
         this._renderer = renderer;
 
-        this.reset();
-        this._renderer.render(this._cells);
+        this.set(values);
+
+        this._renderer.render(this._grid);
     }
 
-    public set(cells: Array<Cell>): void {
-        if (cells.length !== 81) {
-            throw new Error(`Invalid cells array, must be exact 81 items, given ${cells.length}`);
+    public set(values: Array<number | undefined>): void {
+        if (values.length !== 81) {
+            throw new Error(`Invalid values array, must be exact 81 items, given ${values.length}`);
         }
 
-        this._cells = [];
+        let index: number = 0;
+
+        this._grid.cells = [];
 
         for (const row of array.iterator.range(0, 8, 1)) {
-            for (const column of array.iterator.range(0, 8, 1)) {
-                const cell: Cell = getCellByCoords(column, row, cells);
-
-                this._cells.push(clone(cell));
-            }
-        }
-    }
-
-    public reset(): void {
-        const possiblities: Array<number> = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-        this._cells = [];
-
-        for (const row of array.iterator.range(0, 8, 1)) {
-            for (const column of array.iterator.range(0, 8, 1)) {
-                this._cells.push({
-                    column,
-                    possiblities: [...possiblities],
+            for (const col of array.iterator.range(0, 8, 1)) {
+                this._grid.cells.push({
+                    col,
+                    possibilities: values[index] ? [values[index]] : [...POSSIBILITIES],
                     row
                 });
+
+                index += 1;
             }
         }
     }
 
-    public solve(): void {
-        for (const row of array.iterator.range(0, 8, 1)) {
-            for (const cell of getRow(row, this._cells)) {
-                window.console.log(cell);
-            }
-        }
-
-        this._solvers.forEach((solver: ISolver): void => {
-            this._cells = solver.solve(this._cells);
-
-            this._renderer.render(this._cells);
+    public isSolved(): boolean {
+        return this._grid.cells.every((cell: Cell) => {
+            return cell.possibilities.length === 1;
         });
+    }
+
+    public async solve(): Promise<void> {
+        const solver: ISolver = this._solvers[this._index % this._solvers.length];
+        const solution: Solution = await solver.solve(this._grid);
+
+        this._grid = solution.grid;
+
+        this._renderer.render(this._grid);
+
+        if (solution.solved === false) {
+            this._index += 1;
+        }
     }
 }
