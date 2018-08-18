@@ -60,7 +60,7 @@ export class Sudoku {
         });
     }
 
-    public async solve(): Promise<void> {
+    public async solve(unSolvedTries: number = 0): Promise<void> {
         const solver: ISolver = this._solvers[this._index % this._solvers.length];
         const solution: Solution = await solver.solve(this._grid);
 
@@ -68,8 +68,12 @@ export class Sudoku {
 
         this._renderer.render(this._grid);
 
-        if (solution.solved === false) {
-            this._index += 1;
+        if (this.isSolved() === false) {
+            if (solution.solved === false) {
+                this._index += 1;
+            } else {
+                this._index = 0;
+            }
         }
     }
 }
