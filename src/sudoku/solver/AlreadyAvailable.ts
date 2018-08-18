@@ -76,7 +76,7 @@ export class AlreadyAvailable implements ISolver {
 
                     result.grid.cells[cellIndex].possibilities = remove(solvedValues, cell.possibilities);
                     result.solved = true;
-            }
+                }
             }
         }
 

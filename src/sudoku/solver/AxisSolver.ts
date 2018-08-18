@@ -75,13 +75,6 @@ export class AxisSolver implements ISolver {
         return solution;
     }
 
-    public getOtherIndexes(block: Grid, skipIndex: number, property: Property): Array<number> {
-        const min: number = block.cells[0][property];
-        const max: number = block.cells[block.cells.length - 1][property];
-
-        return Array.from(array.iterator.range(min, max, 1)).filter((i: number): boolean => i !== skipIndex);
-    }
-
     public findPossibilities(partition: Grid, block: Grid): Array<number> {
         return block.cells.reduce(
             (acc: Array<number>, cell: Cell): Array<number> => {
