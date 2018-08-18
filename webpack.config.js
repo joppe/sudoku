@@ -4,6 +4,7 @@ const path = require('path');
 
 const config = {
     devServer: {
+        open: true,
         port: 9000
     },
 
